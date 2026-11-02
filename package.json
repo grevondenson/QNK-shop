@@ -1,0 +1,24 @@
+{
+  "name": "qnk-noire-bags",
+  "version": "0.1.0",
+  "description": "QNK Noire Bags — a mobile-first online bags & accessories store built on the MERN stack.",
+  "private": true,
+  "workspaces": [],
+  "scripts": {
+    "dev:backend": "cd backend && npm run server",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:admin": "cd admin && npm run dev",
+    "install:all": "npm install --prefix backend && npm install --prefix frontend && npm install --prefix admin",
+    "build:frontend": "cd frontend && npm run build",
+    "build:admin": "cd admin && npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "local"
+  },
+  "license": "MIT",
+  "author": "QNK Noire"
+}
