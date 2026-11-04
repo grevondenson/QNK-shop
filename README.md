@@ -29,7 +29,7 @@ qnk_noire_bags/
 | Database | MongoDB (replica set) via Mongoose |
 | Auth | JWT sessions (→ Argon2id + HttpOnly cookies, per architecture) |
 | Images | Cloudinary CDN |
-| Payments | M-Pesa (primary, pending merchant eligibility) · Stripe (secondary) |
+| Payments | M-Pesa via confirmed Till/Poči/Daraja capability (launch path pending provider verification) |
 | Email | Transactional provider (TBD) |
 
 ## Getting started (local dev)
@@ -100,18 +100,19 @@ npm run dev:admin
 | M5 | Hardening, accessibility, security, owner acceptance | 3–5 days |
 | M6 | Launch & stabilisation | 2–3 days + 7-day window |
 
-Full details in [PRD §10](./docs/PRD.md#10-milestone-compass).
+Full details in [PRD §10](./docs/PRD.md#10-milestone-compass) and the current execution plan in the session workspace.
 
 ## Decisions pending (M0 exit gate)
 
-- [ ] Target market & launch country (determines currency & payment provider)
-- [ ] Payment provider merchant eligibility (M-Pesa / Stripe)
+- [x] Target market & launch country: Kenya / KES
+- [ ] M-Pesa Till/Poči/Daraja merchant eligibility, payment initiation, callback and reconciliation mechanism
 - [ ] Delivery zones and fee rules
 - [ ] Hosting provider
 - [ ] Brand brief: personality words, palette, typography, photography direction
 - [ ] Owner-supplied logo and product imagery
-- [ ] Reuse vs. rewrite decisions per audit findings
-- [ ] Rendering strategy (SPA vs. SSR/pre-render) for SEO
+- [x] Website is the sole inventory source at launch
+- [x] Public catalogue SEO requires SSR/pre-rendering before launch
+- [x] Reuse vs. rewrite boundary: retain scaffolding; rewrite insecure payment/auth and clothing-domain flows
 
 ## Licence
 

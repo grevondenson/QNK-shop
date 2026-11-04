@@ -1,19 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --color-cream: #FAF9F6;
+    --color-stone: #CDC9C1;
+    --color-sand: #D1BAA6;
+    --color-saddle: #8B6D53;
+    --color-olive: #929471;
+    --color-charcoal: #4D4D4D;
+    --font-display: "The Seasons", "Playfair Display", Georgia, serif;
+    --font-body: "Glacial Indifference", "DM Sans", Arial, sans-serif;
+}
+
 *{
-    font-family: Outfit;
+    font-family: var(--font-body);
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--color-cream);
+    color: var(--color-charcoal);
 }
 
 select,input,textarea{
-    border: 1px solid #c2c2c2;
-    outline-color: #C586A5;
+    border: 1px solid var(--color-stone);
+    outline-color: var(--color-saddle);
     border-radius: 4px;
 }
 
 .active{
-    background-color: #ffebf5;
-    border-color: #C586A5;
+    background-color: var(--color-sand);
+    border-color: var(--color-saddle);
 }

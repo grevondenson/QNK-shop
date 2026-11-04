@@ -10,7 +10,7 @@ const Product = () => {
   const { products, currency ,addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('')
-  const [size,setSize] = useState('')
+  const [variantId,setVariantId] = useState('')
 
   const fetchProductData = async () => {
 
@@ -18,6 +18,7 @@ const Product = () => {
       if (item._id === productId) {
         setProductData(item)
         setImage(item.image[0])
+        setVariantId(item.variants?.[0]?._id || '')
         return null;
       }
     })
@@ -58,22 +59,25 @@ const Product = () => {
               <img src={assets.star_dull_icon} alt="" className="w-3 5" />
               <p className='pl-2'>(122)</p>
           </div>
-          <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
+          <p className='mt-5 text-3xl font-medium'>{currency}{productData.variants?.length ? (productData.variants.find((variant) => variant._id === variantId)?.priceMinor / 100).toFixed(2) : productData.price}</p>
           <p className='mt-5 text-gray-500 md:w-4/5'>{productData.description}</p>
           <div className='flex flex-col gap-4 my-8'>
-              <p>Select Size</p>
-              <div className='flex gap-2'>
-                {productData.sizes.map((item,index)=>(
-                  <button onClick={()=>setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`} key={index}>{item}</button>
-                ))}
-              </div>
+            <p>Select colour and material</p>
+            <div className='flex flex-wrap gap-2'>
+              {productData.variants?.map((variant) => (
+                <button type='button' onClick={()=>setVariantId(variant._id)} className={`border px-4 py-2 text-left ${variant._id === variantId ? 'border-saddle bg-sand/30' : 'bg-gray-100'}`} key={variant._id}>
+                  <span className='block'>{variant.colour}</span>
+                  <span className='text-xs text-charcoal/60'>{variant.material} · {variant.stockOnHand - variant.reservedQuantity > 0 ? 'In stock' : 'Out of stock'}</span>
+                </button>
+              ))}
+            </div>
           </div>
-          <button onClick={()=>addToCart(productData._id,size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button disabled={!variantId || (productData.variants?.find((variant) => variant._id === variantId)?.stockOnHand - productData.variants?.find((variant) => variant._id === variantId)?.reservedQuantity <= 0)} onClick={()=>addToCart(productData._id,variantId)} className='bg-saddle px-8 py-3 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5' />
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
               <p>100% Original product.</p>
-              <p>Cash on delivery is available on this product.</p>
-              <p>Easy return and exchange policy within 7 days.</p>
+              <p>Kenya-wide delivery is calculated at checkout.</p>
+              <p>Secure your selected colour and material while stock lasts.</p>
           </div>
         </div>
       </div>
@@ -85,8 +89,8 @@ const Product = () => {
           <p className='border px-5 py-3 text-sm'>Reviews (122)</p>
         </div>
         <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
-          <p>An e-commerce website is an online platform that facilitates the buying and selling of products or services over the internet. It serves as a virtual marketplace where businesses and individuals can showcase their products, interact with customers, and conduct transactions without the need for a physical presence. E-commerce websites have gained immense popularity due to their convenience, accessibility, and the global reach they offer.</p>
-          <p>E-commerce websites typically display products or services along with detailed descriptions, images, prices, and any available variations (e.g., sizes, colors). Each product usually has its own dedicated page with relevant information.</p>
+          <p>Designed for everyday movement, each QNK Noire bag balances considered details with effortless style.</p>
+          <p>Review the available colour, material, dimensions, and capacity before adding your preferred variant to the cart.</p>
         </div>
       </div>
 

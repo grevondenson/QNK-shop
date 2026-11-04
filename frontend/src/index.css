@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,23 +8,53 @@ a.active hr{
     display: block;
 }
 
-*{
-    font-family: Outfit;
+:root {
+  --color-cream: #faf9f6;
+  --color-stone: #cdc9c1;
+  --color-sand: #d1baa6;
+  --color-saddle: #8b6d53;
+  --color-olive: #929471;
+  --color-charcoal: #4d4d4d;
+  --font-display: "The Seasons", "Playfair Display", Georgia, serif;
+  --font-body: "Glacial Indifference", "DM Sans", Arial, sans-serif;
+}
+
+* {
+    font-family: var(--font-body);
+    box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 .prata-regular {
-    font-family: "Prata", serif;
+    font-family: var(--font-display);
     font-weight: 400;
     font-style: normal;
-  }
+}
 
-  ::-webkit-scrollbar{
+.font-display {
+  font-family: var(--font-display);
+}
+
+::-webkit-scrollbar{
     display: none;
-  }
+}
   
-  @media (max-width:640px) {
+@media (max-width:640px) {
     a.active{
-        background-color: black;
+        background-color: var(--color-saddle);
         color: white;
     }
-  }
+}

@@ -7,12 +7,12 @@ const ProductItem = ({id,image,name,price}) => {
     const {currency} = useContext(ShopContext);
 
   return (
-    <Link onClick={()=>scrollTo(0,0)} className='text-gray-700 cursor-pointer' to={`/product/${id}`}>
-      <div className=' overflow-hidden'>
-        <img className='hover:scale-110 transition ease-in-out' src={image[0]} alt="" />
+    <Link onClick={()=>scrollTo(0,0)} className='cursor-pointer text-charcoal' to={`/product/${id}`}>
+      <div className='overflow-hidden bg-sand/20'>
+        <img className='transition duration-500 ease-in-out hover:scale-105' src={image[0]} alt={name} />
       </div>
-      <p className='pt-3 pb-1 text-sm'>{name}</p>
-      <p className=' text-sm font-medium'>{currency}{price}</p>
+      <p className='pb-1 pt-3 text-sm'>{name}</p>
+      <p className='text-sm font-medium text-saddle'>{currency}{price}</p>
     </Link>
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { assets } from '../assets/assets'
+import { brand } from '../brand'
 
 
 const Footer = () => {
@@ -8,18 +8,21 @@ const Footer = () => {
       <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm'>
 
         <div>
-            <img src={assets.logo} className='mb-5 w-32' alt="" />
+            <div className='mb-5 leading-none text-charcoal'>
+                <span className='font-display block text-3xl tracking-[0.12em]'>QNK</span>
+                <span className='block text-[10px] tracking-[0.22em] text-saddle'>NOIRE BAGS</span>
+            </div>
             <p className='w-full md:w-2/3 text-gray-600'>
-            Dreams Clothing brings you the latest in fashion with trendy, high-quality clothing for every occasion. Discover stylish collections, enjoy a seamless shopping experience, and express your unique style effortlessly. Fast shipping, exclusive deals, and hassle-free returns await you!  
+            {brand.name} brings you thoughtfully selected bags and accessories for everyday expression. Discover effortless silhouettes, considered details, and pieces {brand.statement.toLowerCase()}.
             </p>
         </div>
 
         <div>
             <p className='text-xl font-medium mb-5'>COMPANY</p>
             <ul className='flex flex-col gap-1 text-gray-600'>
-                <li>Home</li>
-                <li>About us</li>
-                <li>Delivery</li>
+                <li><a href='/'>Home</a></li>
+                <li><a href='/about'>About us</a></li>
+                <li>{brand.delivery}</li>
                 <li>Privacy policy</li>
             </ul>
         </div>
@@ -27,8 +30,9 @@ const Footer = () => {
         <div>
             <p className='text-xl font-medium mb-5'>GET IN TOUCH</p>
             <ul className='flex flex-col gap-1 text-gray-600'>
-                <li>+91 96246 34498</li>
-                <li>contact@dreamscothing.com</li>
+                <li>{brand.phone}</li>
+                <li>{brand.email}</li>
+                <li className='pt-2 text-saddle'>{brand.reservation}</li>
             </ul>
         </div>
 
@@ -36,7 +40,7 @@ const Footer = () => {
 
         <div>
             <hr />
-            <p className='py-5 text-sm text-center'>Copyright 2024@ dreamscothing.com - All Right Reserved.</p>
+            <p className='py-5 text-sm text-center'>© 2026 {brand.name}. All rights reserved.</p>
         </div>
 
     </div>

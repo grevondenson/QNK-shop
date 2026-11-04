@@ -5,21 +5,22 @@ import userModel from "../models/userModel.js"
 const addToCart = async (req,res) => {
     try {
         
-        const { userId, itemId, size } = req.body
+        const { userId, itemId, variantId } = req.body
+        if (!itemId || !variantId) return res.json({ success: false, message: "Product variant is required" })
 
         const userData = await userModel.findById(userId)
         let cartData = await userData.cartData;
 
         if (cartData[itemId]) {
-            if (cartData[itemId][size]) {
-                cartData[itemId][size] += 1
+            if (cartData[itemId][variantId]) {
+                cartData[itemId][variantId] += 1
             }
             else {
-                cartData[itemId][size] = 1
+                cartData[itemId][variantId] = 1
             }
         } else {
             cartData[itemId] = {}
-            cartData[itemId][size] = 1
+            cartData[itemId][variantId] = 1
         }
 
         await userModel.findByIdAndUpdate(userId, {cartData})
@@ -36,12 +37,18 @@ const addToCart = async (req,res) => {
 const updateCart = async (req,res) => {
     try {
         
-        const { userId ,itemId, size, quantity } = req.body
+        const { userId ,itemId, variantId, quantity } = req.body
+        if (!itemId || !variantId || !Number.isInteger(Number(quantity)) || Number(quantity) < 0) return res.json({ success: false, message: "Valid product quantity is required" })
 
         const userData = await userModel.findById(userId)
         let cartData = await userData.cartData;
 
-        cartData[itemId][size] = quantity
+        if (quantity === 0) {
+            delete cartData[itemId][variantId]
+            if (Object.keys(cartData[itemId]).length === 0) delete cartData[itemId]
+        } else {
+            cartData[itemId][variantId] = quantity
+        }
 
         await userModel.findByIdAndUpdate(userId, {cartData})
         res.json({ success: true, message: "Cart Updated" })

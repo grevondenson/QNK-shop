@@ -1,7 +1,7 @@
 # Technical Architecture
 
-Project: Your Shop — Custom Clothing Store
-Version: 0.1 — proposed target architecture, not a statement of verified repository internals.
+Project: QNK Noire Bags — Bags and Accessories Store
+Version: 0.2 — M0-aligned target architecture, not a statement of verified repository internals.
 Reference: https://github.com/bhavinvagh/online_clothes_store
 
 ## 1. Architectural approach
@@ -21,13 +21,13 @@ The reference repository exposes frontend/backend/admin directories and describe
 | Database | Managed MongoDB replica set + Mongoose | Records, indexes and multi-document transactions |
 | Identity | Opaque server sessions; Argon2id password hashes | Revocable login sessions without browser-accessible bearer tokens |
 | Media | Managed object/image storage and CDN | Product uploads, transformations and delivery |
-| Payments | Provider adapter; M-Pesa candidate if Kenya is confirmed | Isolate payment-specific request, verification and reconciliation logic |
+| Payments | M-Pesa provider adapter for the confirmed merchant Till/Poči/Daraja capability | Isolate payment initiation, verification, callbacks and reconciliation; do not assume STK Push is available |
 | Email | Transactional email provider | Order and recovery messages with retries |
 | Hosting | Static web hosting; managed Node web service + worker | Separate UI delivery from API/background processing |
 | Testing | Vitest, React Testing Library, Supertest, Playwright | Unit, component, integration and end-to-end coverage |
 | Operations | Error monitoring, structured logs, CI pipeline | Release confidence and incident diagnosis |
 
-Pin exact supported versions and run a dependency audit during M0. Final provider selection depends on merchant eligibility, costs, market and operational requirements. Do not assume Stripe, PayPal or M-Pesa already works in the reference code.
+Pin exact supported versions and run a dependency audit during M0. Kenya/KES and M-Pesa are the launch direction, but the merchant's Till/Poči/Daraja permissions and supported payment initiation must be verified before implementation. Do not assume Stripe, PayPal, STK Push or any M-Pesa callback already works in the reference code.
 For product SEO, pre-render public product/category pages or adopt server rendering before launch if organic acquisition is a core requirement. A Vite client-rendered SPA alone is not a full SEO strategy; agree this requirement in M0 rather than adding a rendering migration late.
 
 ## 3. System layout

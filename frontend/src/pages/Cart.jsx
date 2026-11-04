@@ -19,7 +19,7 @@ const Cart = () => {
           if (cartItems[items][item] > 0) {
             tempData.push({
               _id: items,
-              size: item,
+              variantId: item,
               quantity: cartItems[items][item]
             })
           }
@@ -42,6 +42,8 @@ const Cart = () => {
 
             const productData = products.find((product) => product._id === item._id);
 
+            if (!productData || !productData.variants) return null;
+
             return (
               <div key={index} className='py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4'>
                 <div className=' flex items-start gap-6'>
@@ -49,13 +51,13 @@ const Cart = () => {
                   <div>
                     <p className='text-xs sm:text-lg font-medium'>{productData.name}</p>
                     <div className='flex items-center gap-5 mt-2'>
-                      <p>{currency}{productData.price}</p>
-                      <p className='px-2 sm:px-3 sm:py-1 border bg-slate-50'>{item.size}</p>
+                      <p>{currency}{((productData.variants.find((variant) => variant._id === item.variantId)?.priceMinor || 0) / 100).toFixed(2)}</p>
+                      <p className='border bg-slate-50 px-2 sm:px-3 sm:py-1'>{productData.variants.find((variant) => variant._id === item.variantId)?.colour}</p>
                     </div>
                   </div>
                 </div>
-                <input onChange={(e) => e.target.value === '' || e.target.value === '0' ? null : updateQuantity(item._id, item.size, Number(e.target.value))} className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number" min={1} defaultValue={item.quantity} />
-                <img onClick={() => updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer' src={assets.bin_icon} alt="" />
+                <input onChange={(e) => updateQuantity(item._id, item.variantId, Number(e.target.value))} className='max-w-10 border px-1 py-1 sm:max-w-20 sm:px-2' type="number" min={1} value={item.quantity} />
+                <img onClick={() => updateQuantity(item._id, item.variantId, 0)} className='mr-4 w-4 cursor-pointer sm:w-5' src={assets.bin_icon} alt="Remove item" />
               </div>
             )
 

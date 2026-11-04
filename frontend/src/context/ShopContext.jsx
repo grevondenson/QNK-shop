@@ -7,44 +7,50 @@ export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
 
-    const currency = '₹ ';
+    const currency = 'KES ';
     const delivery_fee = 50;
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
-    const [cartItems, setCartItems] = useState({});
+    const [cartItems, setCartItems] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('qnk_guest_cart') || '{}');
+        } catch {
+            return {};
+        }
+    });
     const [products, setProducts] = useState([]);
     const [token, setToken] = useState('')
     const navigate = useNavigate();
 
 
-    const addToCart = async (itemId, size) => {
+    const addToCart = async (itemId, variantId) => {
 
-        if (!size) {
-            toast.error('Select Product Size');
+        if (!variantId) {
+            toast.error('Select a colour and material');
             return;
         }
 
         let cartData = structuredClone(cartItems);
 
         if (cartData[itemId]) {
-            if (cartData[itemId][size]) {
-                cartData[itemId][size] += 1;
+            if (cartData[itemId][variantId]) {
+                cartData[itemId][variantId] += 1;
             }
             else {
-                cartData[itemId][size] = 1;
+                cartData[itemId][variantId] = 1;
             }
         }
         else {
             cartData[itemId] = {};
-            cartData[itemId][size] = 1;
+            cartData[itemId][variantId] = 1;
         }
         setCartItems(cartData);
 
         if (token) {
             try {
 
-                await axios.post(backendUrl + '/api/cart/add', { itemId, size }, { headers: { token } })
+                await axios.post(backendUrl + '/api/cart/add', { itemId, variantId }, { headers: { token } })
 
             } catch (error) {
                 console.log(error)
@@ -70,18 +76,23 @@ const ShopContextProvider = (props) => {
         return totalCount;
     }
 
-    const updateQuantity = async (itemId, size, quantity) => {
+    const updateQuantity = async (itemId, variantId, quantity) => {
 
         let cartData = structuredClone(cartItems);
 
-        cartData[itemId][size] = quantity;
+        if (quantity <= 0) {
+            delete cartData[itemId][variantId];
+            if (Object.keys(cartData[itemId]).length === 0) delete cartData[itemId];
+        } else {
+            cartData[itemId][variantId] = quantity;
+        }
 
         setCartItems(cartData)
 
         if (token) {
             try {
 
-                await axios.post(backendUrl + '/api/cart/update', { itemId, size, quantity }, { headers: { token } })
+                await axios.post(backendUrl + '/api/cart/update', { itemId, variantId, quantity }, { headers: { token } })
 
             } catch (error) {
                 console.log(error)
@@ -94,14 +105,14 @@ const ShopContextProvider = (props) => {
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
-            let itemInfo = products.find((product) => product._id === items);
-            for (const item in cartItems[items]) {
+            const itemInfo = products.find((product) => product._id === items);
+            for (const variantId in cartItems[items]) {
                 try {
-                    if (cartItems[items][item] > 0) {
-                        totalAmount += itemInfo.price * cartItems[items][item];
+                    const variant = itemInfo?.variants?.find((entry) => entry._id === variantId);
+                    if (cartItems[items][variantId] > 0 && variant) {
+                        totalAmount += (variant.priceMinor / 100) * cartItems[items][variantId];
                     }
                 } catch (error) {
-
                 }
             }
         }
@@ -136,6 +147,10 @@ const ShopContextProvider = (props) => {
             toast.error(error.message)
         }
     }
+
+    useEffect(() => {
+        localStorage.setItem('qnk_guest_cart', JSON.stringify(cartItems));
+    }, [cartItems]);
 
     useEffect(() => {
         getProductsData()

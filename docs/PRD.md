@@ -1,11 +1,11 @@
 # Product Requirements Document
 
-Project: Your Shop — Custom Clothing Store
-Version: 0.1 — planning draft
-Status: Proposed requirements; business choices need owner approval.
+Project: QNK Noire Bags — Bags and Accessories Store
+Version: 0.2 — M0-aligned planning baseline
+Status: Kenya/KES launch direction confirmed; provider and policy gates remain explicit.
 
 ## 1. Product vision
-Build a mobile-first online clothing shop that reflects the owner's personality through original photography, typography, colours, editorial content, product selection and brand voice. Customers can discover outfits, choose available sizes and colours, pay, and track their orders. The owner can operate the catalogue, stock, orders and storefront content without editing code.
+Build a mobile-first online bags and accessories shop that reflects QNK Noire Bags through original photography, typography, colours, editorial content, product selection and brand voice. Customers can discover products, choose valid variants, pay, and track their orders. The owner can operate the catalogue, stock, orders and storefront content without editing code.
 
 This is a single-brand, single-merchant store, not a marketplace. Reuse suitable engineering from the reference project, not its identity, imagery or unverified integrations.
 
@@ -16,21 +16,24 @@ This draft is based on that repository page and README, not a completed source-c
 The README states MIT licensing; verify the actual licence, applicable notices and rights to all images, fonts and other assets before reuse.
 
 ## 3. Intended users
-- Shoppers: mobile and desktop visitors seeking clothing, fit information, reliable stock and transparent delivery charges.
+- Shoppers: mobile and desktop visitors seeking bags and accessories, product dimensions/capacity, reliable stock and transparent delivery charges.
 - Returning customers: customers who want saved details and order history.
 - Shop owner/admin: manages products, variants, imagery, stock, orders and brand content.
 - Fulfilment staff: sees the order and delivery details needed to pack and dispatch purchases; cannot change permissions or site settings.
 
 ## 4. Working assumptions and decisions
 Planning assumptions, not confirmed business facts:
-- One shop, one inventory location, physical clothing products and one launch currency.
-- If the shop serves Kenya, propose KES, M-Pesa and Kenya-focused delivery zones. The owner's location alone does not establish the shop's market.
+- One shop, one inventory location, physical bags/accessories and one launch currency.
+- Launch market is Kenya with KES. Delivery zones, fees, estimates, tax presentation and policy wording remain owner-approved configuration.
+- M-Pesa is the only planned launch payment method. The merchant's Till/Poči/Daraja capability must be verified before selecting STK Push, customer-initiated Till payment, callback, and reconciliation flows.
+- The website is the sole inventory source at launch.
+- Public catalogue and category pages require pre-rendering/SSR before launch for SEO; private/admin routes may remain client-rendered.
 - Guest checkout is available; creating an account is optional.
 - One primary payment integration at launch; additional payment methods are not release blockers unless explicitly approved.
 - Owner supplies or licenses product photography, logos and copy.
-- Stock is managed per size/colour variant.
+- Stock is managed per product variant such as colour/finish, material, and capacity/dimensions; products without a meaningful size dimension must not inherit clothing-size assumptions.
 
-Decisions required before implementation: shop name, target shoppers, selling country/currency, existing logo and product assets, visual references, product categories, payment provider, delivery regions/rates, returns policy, budget, deadline, fulfilment workflow and whether inventory is shared with a physical shop.
+Decisions required before implementation: target shoppers, existing logo and product assets, visual references, product categories, M-Pesa merchant/API eligibility and payment initiation, delivery regions/rates, returns/refund policy, fulfilment workflow, privacy/retention rules, hosting, and SEO rendering implementation.
 
 ## 5. Brand and design requirements
 Before high-fidelity development, approve a brand brief with:

@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import {assets} from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
+import { brand } from '../brand'
 
 const Navbar = () => {
 
@@ -17,9 +18,13 @@ const Navbar = () => {
     }
 
   return (
-    <div className='flex items-center justify-between py-5 font-medium'>
+    <header>
+    <div className='flex items-center justify-between border-b border-stone/60 py-5 font-medium'>
       
-      <Link to='/'><img src={assets.logo} className='w-36' alt="" /></Link>
+      <Link to='/' className='leading-none text-charcoal' aria-label={`${brand.name} home`}>
+        <span className='font-display block text-2xl tracking-[0.12em]'>QNK</span>
+        <span className='block text-[9px] tracking-[0.22em] text-saddle'>NOIRE BAGS</span>
+      </Link>
 
       <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
         
@@ -43,10 +48,10 @@ const Navbar = () => {
       </ul>
 
       <div className='flex items-center gap-6'>
-            <img onClick={()=> { setShowSearch(true); navigate('/collection') }} src={assets.search_icon} className='w-5 cursor-pointer' alt="" />
+            <img onClick={()=> { setShowSearch(true); navigate('/collection') }} src={assets.search_icon} className='w-5 cursor-pointer' alt='Search' />
             
             <div className='group relative'>
-                <img onClick={()=> token ? null : navigate('/login') } className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
+                <img onClick={()=> token ? null : navigate('/login') } className='w-5 cursor-pointer' src={assets.profile_icon} alt='Account' />
                 {/* Dropdown Menu */}
                 {token && 
                 <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
@@ -58,10 +63,10 @@ const Navbar = () => {
                 </div>}
             </div> 
             <Link to='/cart' className='relative'>
-                <img src={assets.cart_icon} className='w-5 min-w-5' alt="" />
+                <img src={assets.cart_icon} className='w-5 min-w-5' alt='Cart' />
                 <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{getCartCount()}</p>
             </Link> 
-            <img onClick={()=>setVisible(true)} src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt="" /> 
+            <img onClick={()=>setVisible(true)} src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt='Open menu' /> 
       </div>
 
         {/* Sidebar menu for small screens */}
@@ -79,6 +84,10 @@ const Navbar = () => {
         </div>
 
     </div>
+    <div className='hidden border-b border-stone/50 py-2 text-center text-[10px] tracking-[0.2em] text-charcoal/70 sm:block'>
+      {brand.tagline} · {brand.statement} · {brand.delivery}
+    </div>
+    </header>
   )
 }
 
