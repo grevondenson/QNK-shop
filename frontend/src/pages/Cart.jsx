@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
-import Title from '../components/Title';
-import { assets } from '../assets/assets';
-import CartTotal from '../components/CartTotal';
+import Title from '../components/Title'
+import { assets } from '../assets/assets'
+import CartTotal from '../components/CartTotal'
 
 const Cart = () => {
 
@@ -11,7 +11,6 @@ const Cart = () => {
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
-
     if (products.length > 0) {
       const tempData = [];
       for (const items in cartItems) {
@@ -30,49 +29,91 @@ const Cart = () => {
   }, [cartItems, products])
 
   return (
-    <div className='border-t pt-14'>
+    <div className='border-t border-stone/50 pt-12'>
 
-      <div className=' text-2xl mb-3'>
-        <Title text1={'YOUR'} text2={'CART'} />
+      <div className='text-2xl mb-4'>
+        <Title text1={'YOUR'} text2={'SHOPPING BAG'} />
       </div>
 
-      <div>
-        {
-          cartData.map((item, index) => {
+      {cartData.length === 0 ? (
+        <div className='py-20 text-center bg-sand/15 border border-stone/40 my-6 rounded-sm'>
+          <p className='font-display text-xl text-charcoal'>Your shopping bag is currently empty.</p>
+          <p className='text-xs text-charcoal/70 mt-2 mb-6'>Explore our curated collection of effortlessly chic bags and accessories.</p>
+          <button 
+            onClick={() => navigate('/collection')} 
+            className='bg-charcoal text-cream hover:bg-saddle px-8 py-3 text-xs tracking-widest uppercase transition-colors'
+          >
+            DISCOVER COLLECTION
+          </button>
+        </div>
+      ) : (
+        <div>
+          {
+            cartData.map((item, index) => {
+              const productData = products.find((product) => product._id === item._id);
+              if (!productData) return null;
 
-            const productData = products.find((product) => product._id === item._id);
+              const variant = productData.variants?.find((v) => v._id === item.variantId);
+              const price = variant ? (variant.priceMinor / 100) : productData.price;
 
-            if (!productData || !productData.variants) return null;
-
-            return (
-              <div key={index} className='py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4'>
-                <div className=' flex items-start gap-6'>
-                  <img className='w-16 sm:w-20' src={productData.image[0]} alt="" />
-                  <div>
-                    <p className='text-xs sm:text-lg font-medium'>{productData.name}</p>
-                    <div className='flex items-center gap-5 mt-2'>
-                      <p>{currency}{((productData.variants.find((variant) => variant._id === item.variantId)?.priceMinor || 0) / 100).toFixed(2)}</p>
-                      <p className='border bg-slate-50 px-2 sm:px-3 sm:py-1'>{productData.variants.find((variant) => variant._id === item.variantId)?.colour}</p>
+              return (
+                <div key={index} className='py-4 border-b border-stone/40 text-charcoal grid grid-cols-[4fr_1fr_0.5fr] items-center gap-4'>
+                  <div className='flex items-start gap-4 sm:gap-6'>
+                    <img className='w-16 sm:w-20 object-cover bg-sand/20 border border-stone/40 rounded-sm' src={productData.image[0]} alt={productData.name} />
+                    <div className='space-y-1'>
+                      <p className='text-sm sm:text-base font-medium'>{productData.name}</p>
+                      <div className='flex flex-wrap items-center gap-2 text-xs text-charcoal/70'>
+                        <span className='font-semibold text-saddle'>{currency}{price.toLocaleString()}</span>
+                        {variant && (
+                          <>
+                            <span>·</span>
+                            <span className='border border-stone/60 bg-sand/30 px-2 py-0.5 rounded text-[11px]'>{variant.colour}</span>
+                            <span className='text-[11px] text-charcoal/60'>({variant.material})</span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
+
+                  <div className='flex justify-center'>
+                    <input 
+                      onChange={(e) => e.target.value === '' || e.target.value === '0' ? null : updateQuantity(item._id, item.variantId, Number(e.target.value))} 
+                      className='w-12 sm:w-16 border border-stone px-2 py-1 text-center text-sm rounded outline-none focus:border-saddle' 
+                      type="number" 
+                      min={1} 
+                      value={item.quantity} 
+                    />
+                  </div>
+
+                  <div className='flex justify-end'>
+                    <button 
+                      onClick={() => updateQuantity(item._id, item.variantId, 0)} 
+                      className='p-1 hover:opacity-60 transition-opacity'
+                      aria-label="Remove item"
+                    >
+                      <img className='w-4 sm:w-4.5 cursor-pointer' src={assets.bin_icon} alt="Remove item" />
+                    </button>
+                  </div>
                 </div>
-                <input onChange={(e) => updateQuantity(item._id, item.variantId, Number(e.target.value))} className='max-w-10 border px-1 py-1 sm:max-w-20 sm:px-2' type="number" min={1} value={item.quantity} />
-                <img onClick={() => updateQuantity(item._id, item.variantId, 0)} className='mr-4 w-4 cursor-pointer sm:w-5' src={assets.bin_icon} alt="Remove item" />
+              )
+            })
+          }
+
+          <div className='flex justify-end my-16'>
+            <div className='w-full sm:w-[480px]'>
+              <CartTotal />
+              <div className='w-full text-end mt-6'>
+                <button 
+                  onClick={() => navigate('/place-order')} 
+                  className='bg-charcoal text-cream hover:bg-saddle text-xs tracking-widest uppercase px-10 py-3.5 transition-colors font-medium shadow-sm w-full sm:w-auto'
+                >
+                  PROCEED TO RESERVATION CHECKOUT
+                </button>
               </div>
-            )
-
-          })
-        }
-      </div>
-
-      <div className='flex justify-end my-20'>
-        <div className='w-full sm:w-[450px]'>
-          <CartTotal />
-          <div className=' w-full text-end'>
-            <button onClick={() => navigate('/place-order')} className='bg-black text-white text-sm my-8 px-8 py-3'>PROCEED TO CHECKOUT</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
     </div>
   )

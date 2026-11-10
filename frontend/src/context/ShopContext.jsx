@@ -2,14 +2,15 @@ import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import { products as initialProducts } from '../assets/assets';
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
 
     const currency = 'KES ';
-    const delivery_fee = 50;
-    const backendUrl = import.meta.env.VITE_BACKEND_URL
+    const delivery_fee = 500; // 500 KES standard courier delivery in Kenya
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState(() => {
@@ -19,10 +20,9 @@ const ShopContextProvider = (props) => {
             return {};
         }
     });
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState(initialProducts);
     const [token, setToken] = useState('')
     const navigate = useNavigate();
-
 
     const addToCart = async (itemId, variantId) => {
 
@@ -46,18 +46,15 @@ const ShopContextProvider = (props) => {
             cartData[itemId][variantId] = 1;
         }
         setCartItems(cartData);
+        toast.success('Added to bag');
 
         if (token) {
             try {
-
-                await axios.post(backendUrl + '/api/cart/add', { itemId, variantId }, { headers: { token } })
-
+                await axios.post(backendUrl + '/api/cart/add', { itemId, size: variantId }, { headers: { token } })
             } catch (error) {
                 console.log(error)
-                toast.error(error.message)
             }
         }
-
     }
 
     const getCartCount = () => {
@@ -80,39 +77,34 @@ const ShopContextProvider = (props) => {
 
         let cartData = structuredClone(cartItems);
 
-        if (quantity <= 0) {
-            delete cartData[itemId][variantId];
-            if (Object.keys(cartData[itemId]).length === 0) delete cartData[itemId];
-        } else {
-            cartData[itemId][variantId] = quantity;
-        }
+        cartData[itemId][variantId] = quantity;
 
         setCartItems(cartData)
 
         if (token) {
             try {
-
-                await axios.post(backendUrl + '/api/cart/update', { itemId, variantId, quantity }, { headers: { token } })
-
+                await axios.post(backendUrl + '/api/cart/update', { itemId, size: variantId, quantity }, { headers: { token } })
             } catch (error) {
                 console.log(error)
                 toast.error(error.message)
             }
         }
-
     }
 
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
-            const itemInfo = products.find((product) => product._id === items);
-            for (const variantId in cartItems[items]) {
+            let itemInfo = products.find((product) => product._id === items);
+            if (!itemInfo) continue;
+            for (const item in cartItems[items]) {
                 try {
-                    const variant = itemInfo?.variants?.find((entry) => entry._id === variantId);
-                    if (cartItems[items][variantId] > 0 && variant) {
-                        totalAmount += (variant.priceMinor / 100) * cartItems[items][variantId];
+                    if (cartItems[items][item] > 0) {
+                        const variant = itemInfo.variants?.find((v) => v._id === item);
+                        const unitPrice = variant ? (variant.priceMinor / 100) : itemInfo.price;
+                        totalAmount += unitPrice * cartItems[items][item];
                     }
                 } catch (error) {
+
                 }
             }
         }
@@ -121,30 +113,24 @@ const ShopContextProvider = (props) => {
 
     const getProductsData = async () => {
         try {
-
             const response = await axios.get(backendUrl + '/api/product/list')
-            if (response.data.success) {
+            if (response.data.success && response.data.products?.length > 0) {
                 setProducts(response.data.products.reverse())
-            } else {
-                toast.error(response.data.message)
             }
-
         } catch (error) {
-            console.log(error)
-            toast.error(error.message)
+            // Keep initial curated bag products gracefully
+            console.info("Using curated local catalogue while API connects.");
         }
     }
 
     const getUserCart = async ( token ) => {
         try {
-            
             const response = await axios.post(backendUrl + '/api/cart/get',{},{headers:{token}})
             if (response.data.success) {
                 setCartItems(response.data.cartData)
             }
         } catch (error) {
             console.log(error)
-            toast.error(error.message)
         }
     }
 
@@ -169,7 +155,7 @@ const ShopContextProvider = (props) => {
     const value = {
         products, currency, delivery_fee,
         search, setSearch, showSearch, setShowSearch,
-        cartItems, addToCart,setCartItems,
+        cartItems, addToCart, setCartItems,
         getCartCount, updateQuantity,
         getCartAmount, navigate, backendUrl,
         setToken, token

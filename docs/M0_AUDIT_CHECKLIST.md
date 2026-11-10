@@ -75,10 +75,10 @@
 ## 8. Business discovery — owner answers required
 
 - [ ] Shop name confirmed: **QNK Noire Bags**
-- [ ] Target market / launch country: ___________
-- [ ] Launch currency: ___________
-- [ ] Primary payment provider (confirm eligibility): ___________
-- [ ] Delivery zones and fee rules: ___________
+- [ ] Target market / launch country: ** Kenya
+- [ ] Launch currency:KSH 
+- [ ] Primary payment provider (confirm eligibility):MPESA STK Push 
+- [ ] Delivery zones and fee rules: Country wide transport charges apply
 - [ ] Returns & cancellation policy: ___________
 - [ ] Owner-supplied: logo, brand colours, product photography? ___________
 - [ ] Does owner have an existing inventory system to sync? ___________
